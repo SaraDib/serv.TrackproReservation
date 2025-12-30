@@ -47,6 +47,7 @@ class Exception
      * @param  \Illuminate\Http\Request  $request
      * @param  \Illuminate\Foundation\Exceptions\Renderer\Listener  $listener
      * @param  string  $basePath
+     * @return void
      */
     public function __construct(FlattenException $exception, Request $request, Listener $listener, string $basePath)
     {
@@ -87,23 +88,17 @@ class Exception
     }
 
     /**
-     * Get the exception code.
-     *
-     * @return int|string
-     */
-    public function code()
-    {
-        return $this->exception->getCode();
-    }
-
-    /**
-     * Get the HTTP status code.
+     * Get the first "non-vendor" frame index.
      *
      * @return int
      */
-    public function httpStatusCode()
+    public function defaultFrame()
     {
-        return $this->exception->getStatusCode();
+        $key = array_search(false, array_map(function (Frame $frame) {
+            return $frame->isFromVendor();
+        }, $this->frames()->all()));
+
+        return $key === false ? 0 : $key;
     }
 
     /**
@@ -126,50 +121,9 @@ class Exception
             array_shift($trace);
         }
 
-        $frames = [];
-        $previousFrame = null;
-
-        foreach (array_reverse($trace) as $frameData) {
-            $frame = new Frame($this->exception, $classMap, $frameData, $this->basePath, $previousFrame);
-            $frames[] = $frame;
-            $previousFrame = $frame;
-        }
-
-        $frames = array_reverse($frames);
-
-        foreach ($frames as $frame) {
-            if (! $frame->isFromVendor()) {
-                $frame->markAsMain();
-                break;
-            }
-        }
-
-        return new Collection($frames);
-    }
-
-    /**
-     * Get the exception's frames grouped by vendor status.
-     *
-     * @return array<int, array{is_vendor: bool, frames: array<int, Frame>}>
-     */
-    public function frameGroups()
-    {
-        $groups = [];
-
-        foreach ($this->frames() as $frame) {
-            $isVendor = $frame->isFromVendor();
-
-            if (empty($groups) || $groups[array_key_last($groups)]['is_vendor'] !== $isVendor) {
-                $groups[] = [
-                    'is_vendor' => $isVendor,
-                    'frames' => [],
-                ];
-            }
-
-            $groups[array_key_last($groups)]['frames'][] = $frame;
-        }
-
-        return $groups;
+        return new Collection(array_map(
+            fn (array $trace) => new Frame($this->exception, $classMap, $trace, $this->basePath), $trace,
+        ));
     }
 
     /**
