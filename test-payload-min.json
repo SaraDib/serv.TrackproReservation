@@ -1,0 +1,9 @@
+{
+  "company_name": "Acme Corp",
+  "company_size": "51-200",
+  "website": "https://acme.example",
+  "contact_person": "Jane Doe",
+  "email": "jane.doe@acme.example",
+  "phone": "+33 1 23 45 67 89",
+  "project_description": "We need a new analytics dashboard integrated with our CRM."
+}

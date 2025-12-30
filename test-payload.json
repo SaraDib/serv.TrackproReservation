@@ -1,0 +1,10 @@
+{
+  "company_name": "ACME Corp",
+  "contact_person": "John Doe",
+  "email": "john.doe@example.com",
+  "phone": "+33 1 23 45 67 89",
+  "service_type": "Web Development",
+  "project_description": "Build a corporate website with CMS",
+  "company_size": "11-50",
+  "website": "https://acme.example"
+}
