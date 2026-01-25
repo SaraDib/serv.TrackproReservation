@@ -339,5 +339,8 @@ class DatabaseSeeder extends Seeder
             'content' => "<h1>Conditions d'utilisation</h1><p>En utilisant notre site et nos services, vous acceptez ces conditions et vous engagez à les respecter.</p>",
             'is_active' => true,
         ]);
+
+        // ===== ADMIN USER SEEDER =====
+        $this->call(AdminUserSeeder::class);
     }
 }

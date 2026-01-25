@@ -20,7 +20,15 @@ return [
     'allowed_methods' => ['*'],
 
     // Specify explicit SPA origins to allow credentials
-    'allowed_origins' => ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5174', 'http://127.0.0.1:5174'],
+    'allowed_origins' => [
+        'http://localhost:5173', 
+        'http://127.0.0.1:5173', 
+        'http://localhost:5174', 
+        'http://127.0.0.1:5174',
+        'https://trackprov1.rakopssolutions.com',
+        'https://trackpro.ma',
+        'https://www.trackpro.ma',
+    ],
 
     'allowed_origins_patterns' => [],
 
